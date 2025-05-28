@@ -1,0 +1,1 @@
+<a class="float-book" href="/customer-booking">Book a Pickup Now <i class="fas fa-chevron-right"></i></a>

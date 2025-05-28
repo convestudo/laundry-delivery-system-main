@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0) grayscale(0) contrast(100%) sepia(0) hue-rotate(0deg) saturate(100%) brightness(0) drop-shadow(0 0 0 black);
+}
+
+.menu li > *:not(ul, .menu-title, details, .btn):active, .menu li > *:not(ul, .menu-title, details, .btn).active, .menu li > details > summary:active {
+    --tw-bg-opacity: 1;
+    background-color: rgb(22 66 114 / var(--tw-bg-opacity, 1));
+    --tw-text-opacity: 1;
+    color: #ffffff;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        #9ca3af 0%,   /* gray-400 */
+        #b7bac0 50%,  /* gray-300 */
+        #9ca3af 100%  /* gray-400 */
+    );
+    background-size: 200% 100%;
+    animation: shimmer 5s linear infinite;
+}
+
+
+
+.img-trackbox{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 800px;
+    padding-top: 30px;
+    margin: 0 auto;
+}
+
+.img-trackbox .track-item{
+    width: 33%;
+}
+
+.img-trackbox .img1{
+    width: 45px;
+    height: 50px;
+}
+.img-trackbox p{
+    font-size: 16px;
+    font-weight: 600;
+    padding-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.img-trackbox .img2{
+    width: 45px;
+    height: 50px;
+}
+
+.img-trackbox .img3{
+    width: 55px;
+    height: 50px;
+}
+
+.track1 img{
+    transform: translateX(-10px);
+}
+.track1 p{
+    transform: translateX(-35px);
+}
+
+.track2 img{
+    transform: translateX(-10px);
+}
+.track2 p{
+    transform: translateX(-15px);
+}
+
+.track3 img{
+    transform: translateX(25px);
+}
+.track3 p{
+    transform: translateX(20px);
+}
+
+.tracking {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+.tracking .progress-custom {
+    position: relative;
+    display: flex;
+}
+
+.tracking .progress-custom .progress-track-p {
+    position: absolute;
+    top: 8px;
+    width: 100%;
+    height: 3px;
+    background-color: #dfe3e4;
+}
+
+.tracking .progress-custom .progress-track-done {
+    position: absolute;
+    top: 8px;
+    height: 3px;
+    background-color: green;
+}
+
+.tracking .progress-custom .psteps {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tracking .progress-custom .psteps .progress-step {
+    position: relative;
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
+}
+
+.tracking .progress-custom .psteps .progress-step:last-child {
+    width: auto;
+}
+
+.tracking .progress-custom .psteps .progress-step:last-child:after {
+    display: none;
+}
+
+.tracking .progress-custom .psteps .progress-step:before {
+    content: "";
+    display: flex;
+    margin-bottom: 10px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border: 4px solid #dfe3e4;
+    border-radius: 100%;
+    color: #fff;
+}
+
+/* Position images above each dot */
+.tracking .progress-custom .psteps .progress-step .step-image {
+    position: absolute;
+    top: -30px;  /* Adjust the vertical position */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;  /* Adjust size of the image */
+    height: 30px;  /* Adjust size of the image */
+    object-fit: cover;
+}
+
+/* Progress bar color and animation */
+.tracking .progress-custom .psteps .progress-step:after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: 0%;
+    transition: width 1s ease-in;
+    height: 5px;
+    background: #dfe3e4;
+    z-index: -1;
+}
+
+.tracking .progress-custom .psteps .progress-step.is-active {
+    color: #2183dd;
+}
+
+.tracking .progress-custom .psteps .progress-step.is-active:before {
+    border: 4px solid #dfe3e4;
+    background: #2183dd;
+    animation: pulse 2s infinite;
+    box-shadow: 0px 0px 1px 0px #000;
+}
+
+.tracking .progress-custom .psteps .progress-step.is-complete {
+    color: #2183dd;
+}
+
+.tracking .progress-custom .psteps .progress-step.is-complete:before {
+    font-family: FontAwesome;
+    font-size: 10px;
+    color: #fff;
+    background: #2183dd;
+    border: 4px solid transparent;
+}
+
+.tracking .progress-custom .psteps .progress-step.is-complete:after {
+    background: #2183dd;
+    animation: nextStep 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(33, 131, 221, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(33, 131, 221, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(33, 131, 221, 0);
+    }
+}
+
+@keyframes nextStep {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+
