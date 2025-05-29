@@ -15,7 +15,7 @@
             <h2 class="menu-title text-[#164272]">Menu</h2>
             <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a></li>
             <li><a href="{{ route('orders.index') }}" class="{{ request()->routeIs('orders.index') ? 'active' : '' }}">Orders List</a></li>
-            <li><a href="{{ route('services.index') }}" class="{{ request()->routeIs('services.index') ? 'active' : '' }}">Service Management</a></li>
+            <li><a href="{{ route('service.index') }}" class="{{ request()->routeIs('service.index') ? 'active' : '' }}">Service Management</a></li>
             <li><a href="{{ route('vouchers.index') }}" class="{{ request()->routeIs('vouchers.index') ? 'active' : '' }}">Voucher Management</a></li>
             <li><a href="{{ route('memberships.index') }}" class="{{ request()->routeIs('memberships.index') ? 'active' : '' }}">Customer Management</a></li>
             <li><a href="{{ route('delivery.index') }}" class="{{ request()->routeIs('delivery.index') ? 'active' : '' }}">Delivery Driver Management</a></li>

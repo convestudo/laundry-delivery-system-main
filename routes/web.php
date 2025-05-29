@@ -57,7 +57,7 @@ Route::get('/payment/cancel', [StripePaymentController::class, 'paymentCancel'])
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/services', [ServiceManagementController::class, 'index'])->name('services.index');
+    Route::get('/services', [ServiceManagementController::class, 'index'])->name('service.index');
     Route::get('/services', [ServiceManagementController::class, 'index']);
     Route::resource('services', ServiceManagementController::class);
     Route::get('/services/{id}/edit', [ServiceManagementController::class, 'edit'])->name('services.edit');
