@@ -498,6 +498,7 @@
 
                 address = `${address1} ${address2} ,${postcode} ${city}, ${state}`;
                 toPayment();
+            console.log('Current phase:', payment);
             }else if(currentPharse == 'payment'){
                 // Build order summary string from cartData
                 let orderSummaryString = '';
@@ -506,31 +507,22 @@
                 });
                 orderSummaryString = orderSummaryString.replace(/, $/, '');
 
-                // Get user email if available (replace with your actual variable)
                 let userEmail = $('#user-email').val() || '';
 
-                // Submit to Stripe
-                // $('#stripe-payment-form').submit();
-                // return;
-                // Set accurate total and order details
-
-                // $('#stripe-total-amount').val(finaltotal); // finaltotal from your calculation
-                // $('#stripe-order-summary').val(orderSummaryString); // Build a string summary of the order
-                // $('#stripe-email').val(userEmail); // If you have the user's email
-
-                // $('#stripe-payment-form').submit();
-
-                $('#stripe-order-name').val('Laundry Order'); // or dynamic
+                $('#stripe-order-name').val('Laundry Order');
                 $('#stripe-total-amount').val(finaltotal);
                 $('#stripe-order-summary').val(orderSummaryString);
                 $('#stripe-email').val(userEmail);
-                $('#stripe-payment-form').submit();
+                $('#stripe-payment-method').val($('#payment_method').val() || 'card');
+
+                // Submit the form as a normal POST
+                $('#stripe-payment-form')[0].submit();
                 return;
-                
-            }else{
-                console.log('Error: Unknown phase');
-                return;
-            }
+                        
+                    }else{
+                        console.log('Error: Unknown phase');
+                        return;
+                    }
         });
 
         function submitOrder(){
@@ -897,6 +889,20 @@ function renderPaymentLayout(){
                                     RM${subtotalSummary.toFixed(2)}
                                 </div>
                             </div>`;
+                    content += `
+            <div class="mb-4 mt-8">
+                <label for="user-email" class="block font-semibold mb-1 text-[#164272] text-[18px]">Email</label>
+                <input type="email" id="user-email" class="border rounded px-3 py-2 w-full" required>
+            </div>
+            <div class="mb-4">
+                <label for="payment_method" class="block font-semibold mb-1 text-[#164272] text-[18px]">Payment Method</label>
+                <select id="payment_method" class="border rounded px-3 py-2 w-full">
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="fpx">FPX (Online Banking)</option>
+                    <option value="grabpay">GrabPay</option>
+                </select>
+            </div>
+        `;
             content += `</div>`;
 
     content += `    </div>
@@ -1326,9 +1332,17 @@ function renderPaymentLayout(){
         </script>
     @endpush
 
-    <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
+    <!-- <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
         @csrf
-    </form>
+    </form> -->
+
+    <!-- <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
+        @csrf
+        <input type="hidden" name="total_amount" id="stripe-total-amount" value="">
+        <input type="hidden" name="order_summary" id="stripe-order-summary" value="">
+        <input type="hidden" name="order_name" id="stripe-order-name" value="">
+        <input type="hidden" name="email" id="stripe-email" value="">
+    </form> -->
 
     <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
         @csrf
@@ -1336,6 +1350,7 @@ function renderPaymentLayout(){
         <input type="hidden" name="order_summary" id="stripe-order-summary" value="">
         <input type="hidden" name="order_name" id="stripe-order-name" value="">
         <input type="hidden" name="email" id="stripe-email" value="">
+        <input type="hidden" name="payment_method" id="stripe-payment-method" value="card">
     </form>
 
 </x-app-layout>

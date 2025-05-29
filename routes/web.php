@@ -50,6 +50,7 @@ use App\Http\Middleware\EnsureCameFromCustomerBooking;
 //     $user->notify(new \App\Notifications\DriverRegistered($user->email, 'dummyPassword'));
 // });
 
+
 Route::post('/pay-simulated', [StripePaymentController::class, 'createSession'])->name('stripe.simulated');
 Route::get('/payment/success', [StripePaymentController::class, 'paymentSuccess'])->name('stripe.success');
 Route::get('/payment/cancel', [StripePaymentController::class, 'paymentCancel'])->name('stripe.cancel');

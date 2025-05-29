@@ -34,18 +34,24 @@ class StripePaymentController extends Controller
 
     // public function createSession(Request $request)
     // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'order_name' => 'required|string',
+    //         'order_summary' => 'nullable|string',
+    //         'total_amount' => 'required|numeric|min:1',
+    //     ]);
+
     //     Stripe::setApiKey(config('services.stripe.secret'));
 
     //     $session = Session::create([
-    //         'payment_method_types' => ['card', 'fpx', 'grabpay'], // Use correct lowercase keys
+    //         'payment_method_types' => ['card', 'fpx', 'grabpay'],
     //         'line_items' => [
     //             [
     //                 'price_data' => [
     //                     'currency' => 'myr',
     //                     'unit_amount' => intval($request->input('total_amount') * 100),
     //                     'product_data' => [
-    //                         'name' => 'Laundry Order',
-    //                         'name' => $request->input('order_name', 'Laundry Order'),
+    //                         'name' => $request->input('order_name'),
     //                         'description' => $request->input('order_summary'),
     //                     ],
     //                 ],
@@ -68,19 +74,20 @@ class StripePaymentController extends Controller
             'order_name' => 'required|string',
             'order_summary' => 'nullable|string',
             'total_amount' => 'required|numeric|min:1',
+            'payment_method' => 'required|string|in:card,fpx,grabpay',
         ]);
 
-        Stripe::setApiKey(config('services.stripe.secret'));
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-        $session = Session::create([
-            'payment_method_types' => ['card', 'fpx', 'grabpay'],
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => [$request->input('payment_method')],
             'line_items' => [
                 [
                     'price_data' => [
                         'currency' => 'myr',
                         'unit_amount' => intval($request->input('total_amount') * 100),
                         'product_data' => [
-                            'name' => $request->input('order_name'),
+                            'name' => $request->input('order_name', 'Laundry Order'),
                             'description' => $request->input('order_summary'),
                         ],
                     ],
