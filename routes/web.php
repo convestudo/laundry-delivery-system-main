@@ -79,7 +79,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/feedback/order/{feedback}', [FeedbackController::class, 'showDetail'])->name('feedback.order.show');
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
-
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // delivery staff
     Route::resource('deliver/order', DeliveryOrderController::class)->names('deliver.order');
