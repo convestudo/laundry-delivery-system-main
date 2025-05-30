@@ -16,7 +16,7 @@ class ServiceManagementController extends Controller
     {
         // Retrieve all service management records
         $services = ServiceManagement::paginate(10);
-        return view('service.index', compact('services'));
+        return view('services.index', compact('services'));
 
     }
 
