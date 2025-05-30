@@ -26,7 +26,7 @@ class ServiceManagementController extends Controller
     public function create()
     {
         //
-        return view('service.create');
+        return view('services.create');
     }
 
     /**
@@ -107,7 +107,7 @@ class ServiceManagementController extends Controller
     public function edit($id)
     {
         $service = ServiceManagement::with('bagDetails')->findOrFail($id);
-        return view('service.edit', compact('service'));
+        return view('services.edit', compact('service'));
     }
 
     public function update(Request $request, $id)
