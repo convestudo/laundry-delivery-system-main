@@ -86,5 +86,10 @@
         <script src="{{ asset('js/jquery.min.js') }}"></script>
         @stack('scripts')
 
+        @stack('modals')
+        @livewireScripts
+        <!-- Add Alpine.js here -->
+        <script src="//unpkg.com/alpinejs" defer></script>
+
     </body>
 </html>
