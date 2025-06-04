@@ -26,8 +26,20 @@ use App\Http\Controllers\Deliver\DeliveryOrderController;
 use App\Http\Controllers\Deliver\DeliveryProfileController;
 
 use App\Http\Middleware\EnsureCameFromCustomerBooking;
+use App\Http\Controllers\Admin\ExtraChargeController;
 
 
+// Route::middleware(['auth', 'can:admin'])->prefix('admin')->group(function () {
+//     Route::get('/extra-charges', [ExtraChargeController::class, 'index'])->name('extra.charges.index');
+//     Route::get('/extra-charges', [ExtraChargeController::class, 'create'])->name('extra.charges.create');
+//     Route::post('/extra-charges', [ExtraChargeController::class, 'store'])->name('extra.charges.store');
+// });
+
+// Route::middleware(['auth', 'can:admin'])->prefix('admin')->group(function () {
+//     Route::get('/extra-charges', [ExtraChargeController::class, 'index'])->name('extra_charges.index');
+//     Route::get('/extra-charges/create', [ExtraChargeController::class, 'create'])->name('extra_charges.create');
+//     Route::post('/extra-charges', [ExtraChargeController::class, 'store'])->name('extra_charges.store');
+// });
 
 
 // Route::middleware(['auth', 'admin'])->group(function () {
@@ -75,6 +87,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('memberships', MembershipController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('feedback', FeedbackController::class);
+
+    Route::resource('extra_charges', ExtraChargeController::class);
+    Route::get('/extra-charges', [ExtraChargeController::class, 'index'])->name('extra_charges.index');
+    Route::get('/extra-charges/create', [ExtraChargeController::class, 'create'])->name('extra_charges.create');
+    Route::post('/extra-charges', [ExtraChargeController::class, 'store'])->name('extra_charges.store');
+    Route::post('/extra-charges/{id}/restore', [ExtraChargeController::class, 'restore'])->name('extra_charges.restore');
+    Route::put('/extra-charges/update', [ExtraChargeController::class, 'update'])->name('extra_charges.update');
+    // Route::get('/extra-charges/{id}/edit', [ExtraChargeController::class, 'edit'])->name('extra_charges.edit');
+    Route::get('/extra-charges/edit', [ExtraChargeController::class, 'edit'])->name('extra_charges.edit');
+    Route::delete('/extra-charges/destroy', [ExtraChargeController::class, 'destroy'])->name('extra_charges.destroy');
 
     Route::patch('/order/{order}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 

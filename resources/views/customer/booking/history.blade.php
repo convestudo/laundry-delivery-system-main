@@ -48,6 +48,7 @@
                             <th class="border border-gray-300 px-4 py-2">Pickup Date</th>
                             <th class="border border-gray-300 px-4 py-2">Time</th>
                             <th class="border border-gray-300 px-4 py-2">Total</th>
+                            <th class="border border-gray-300 px-4 py-2">Payment Method</th> <!-- Payment Method -->
                             <th class="border border-gray-300 px-4 py-2">Status</th>
                             <th class="border border-gray-300 px-4 py-2">Actions</th>
                         </tr>
@@ -82,6 +83,7 @@
                                             $statusClass = 'text-gray-600';
                                     }
                                 @endphp
+                                <td class="border border-gray-300 px-4 py-2">{{ ucfirst($order->payment_method) }}</td> <!-- Show payment method -->
                                 <td class="border border-gray-300 px-4 py-2 capitalize font-600  {{$statusClass}}">{{ $order->order_status }}</td>
                                 <td class="border border-gray-300 px-4 py-2">
                                     <a href="{{ route('customer.order.detail', $order->id) }}"

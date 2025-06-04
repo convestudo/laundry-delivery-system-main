@@ -391,6 +391,7 @@
 
 
         $(document).on('click', '.btn-continue', function () {
+            // console.log('btn-continue clicked, currentPharse:', currentPharse);
             pickupDate = $('#pickup_date').val();
             pickupTime = $('#pickup_time').val();
 
@@ -514,6 +515,25 @@
                 $('#stripe-order-summary').val(orderSummaryString);
                 $('#stripe-email').val(userEmail);
                 $('#stripe-payment-method').val($('#payment_method').val() || 'card');
+
+                // $('#stripe-reference-number').val(generatedReference); // generate or get from backend
+                // // $('#stripe-address').val(address); // build from address fields
+                // $('#stripe-address').val(
+                //     $('#address1').val() + ', ' +
+                //     $('#address2').val() + ', ' +
+                //     $('#postcode').val() + ', ' +
+                //     $('#city').val() + ', ' +
+                //     $('#state').val()
+                // );
+                // $('#stripe-pickup-date').val(pickupDate);
+                // $('#stripe-pickup-time-start').val(pickupTime.split(' - ')[0]);
+                // $('#stripe-pickup-time-end').val(pickupTime.split(' - ')[1]);
+                // $('#stripe-delivery-timing').val(deliveryTiming);
+                // $('#stripe-total-amount').val(finaltotal);
+                // $('#stripe-order-summary').val(orderSummaryString);
+                // $('#stripe-order-name').val('Laundry Order');
+                // $('#stripe-email').val(userEmail);
+                // $('#stripe-payment-method').val($('#payment_method').val() || 'card');
 
                 // Submit the form as a normal POST
                 $('#stripe-payment-form')[0].submit();
@@ -1336,14 +1356,6 @@ function renderPaymentLayout(){
         @csrf
     </form> -->
 
-    <!-- <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
-        @csrf
-        <input type="hidden" name="total_amount" id="stripe-total-amount" value="">
-        <input type="hidden" name="order_summary" id="stripe-order-summary" value="">
-        <input type="hidden" name="order_name" id="stripe-order-name" value="">
-        <input type="hidden" name="email" id="stripe-email" value="">
-    </form> -->
-
     <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
         @csrf
         <input type="hidden" name="total_amount" id="stripe-total-amount" value="">
@@ -1352,6 +1364,21 @@ function renderPaymentLayout(){
         <input type="hidden" name="email" id="stripe-email" value="">
         <input type="hidden" name="payment_method" id="stripe-payment-method" value="card">
     </form>
+
+    <!-- <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
+        @csrf
+        <input type="hidden" name="reference_number" id="stripe-reference-number" value="">
+        <input type="hidden" name="address" id="stripe-address" value="">
+        <input type="hidden" name="pickup_date" id="stripe-pickup-date" value="">
+        <input type="hidden" name="pickup_time_start" id="stripe-pickup-time-start" value="">
+        <input type="hidden" name="pickup_time_end" id="stripe-pickup-time-end" value="">
+        <input type="hidden" name="delivery_timing" id="stripe-delivery-timing" value="">
+        <input type="hidden" name="total_amount" id="stripe-total-amount" value="">
+        <input type="hidden" name="order_summary" id="stripe-order-summary" value="">
+        <input type="hidden" name="order_name" id="stripe-order-name" value="">
+        <input type="hidden" name="email" id="stripe-email" value="">
+        <input type="hidden" name="payment_method" id="stripe-payment-method" value="card">
+    </form> -->
 
 </x-app-layout>
 
