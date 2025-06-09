@@ -14,7 +14,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Order::with(['driver', 'orderedServices.service', 'orderedServices.selectedBagDetail']);
+        $query = Order::with(['payment', 'driver', 'orderedServices.service', 'orderedServices.selectedBagDetail']);
 
         // Filter by reference number
         if ($request->filled('reference_number')) {

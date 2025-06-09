@@ -15,7 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StripePaymentController;
 
-// use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ChatController;
 
 use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\CustomerVoucherController;
@@ -65,8 +65,11 @@ use App\Http\Controllers\Admin\ExtraChargeController;
 
 
 Route::post('/pay-simulated', [StripePaymentController::class, 'createSession'])->name('stripe.simulated');
-Route::get('/payment/success', [StripePaymentController::class, 'paymentSuccess'])->name('stripe.success');
-Route::get('/payment/cancel', [StripePaymentController::class, 'paymentCancel'])->name('stripe.cancel');
+Route::get('/payment/success/call', [StripePaymentController::class, 'paymentSuccess'])->name('stripe.success');
+Route::get('/payment/cancel/call', [StripePaymentController::class, 'paymentCancel'])->name('stripe.cancel');
+Route::get('/payment/success', [StripePaymentController::class, 'successPage'])->name('stripe.success.page');
+Route::get('/payment/cancel', [StripePaymentController::class, 'cancelPage'])->name('stripe.cancel.page');
+Route::post('/order-session', [StripePaymentController::class, 'orderSession'])->name('stripe.order-session');
 
 
 Route::middleware('auth')->group(function () {
@@ -96,7 +99,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/extra-charges/update', [ExtraChargeController::class, 'update'])->name('extra_charges.update');
     // Route::get('/extra-charges/{id}/edit', [ExtraChargeController::class, 'edit'])->name('extra_charges.edit');
     Route::get('/extra-charges/edit', [ExtraChargeController::class, 'edit'])->name('extra_charges.edit');
-    Route::delete('/extra-charges/destroy', [ExtraChargeController::class, 'destroy'])->name('extra_charges.destroy');
+    // Route::delete('/extra-charges/{extra_charge}', [ExtraChargeController::class, 'destroy'])->name('extra_charges.destroy');
+    Route::delete('/extra-charges/{extra_charge}', [ExtraChargeController::class, 'destroy'])->name('extra_charges.destroy');
+
+
 
     Route::patch('/order/{order}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 

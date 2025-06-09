@@ -5,7 +5,16 @@ namespace App\Http\Controllers;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Illuminate\Http\Request;
-// use App\Models\Order;
+use Illuminate\Support\Facades\Session as LaravelSession;
+
+use App\Models\Order;
+use App\Models\ServiceCart;
+use App\Models\Payment;
+use App\Models\OrderedService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class StripePaymentController extends Controller
 {
@@ -33,9 +42,46 @@ class StripePaymentController extends Controller
     //     return redirect($session->url);
     // }
 
-    
+    // public function createSession(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'order_name' => 'required|string',
+    //         'order_summary' => 'nullable|string',
+    //         'total_amount' => 'required|numeric|min:1',
+    //     ]);
+
+    //     Stripe::setApiKey(config('services.stripe.secret'));
+
+    //     $session = Session::create([
+    //         'payment_method_types' => ['card', 'fpx', 'grabpay'],
+    //         'line_items' => [
+    //             [
+    //                 'price_data' => [
+    //                     'currency' => 'myr',
+    //                     'unit_amount' => intval($request->input('total_amount') * 100),
+    //                     'product_data' => [
+    //                         'name' => $request->input('order_name'),
+    //                         'description' => $request->input('order_summary'),
+    //                     ],
+    //                 ],
+    //                 'quantity' => 1,
+    //             ]
+    //         ],
+    //         'mode' => 'payment',
+    //         'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+    //         'cancel_url' => route('stripe.cancel'),
+    //         'customer_email' => $request->input('email'),
+    //     ]);
+
+    //     return redirect($session->url);
+    // }
+
     public function createSession(Request $request)
     {
+
+        $orderData = LaravelSession::get('order_data');
+        // dd($orderData);
         $request->validate([
             'email' => 'required|email',
             'order_name' => 'required|string',
@@ -70,135 +116,196 @@ class StripePaymentController extends Controller
         return redirect($session->url);
     }
 
-    public function paymentSuccess(Request $request)
-    {
+    // public function paymentSuccess(Request $request)
+    // {
+
+    //     dd($request);
+    //     if (!LaravelSession::has('order_data')) {
+    //         return redirect('/schedule')->with('error', 'No order data found.');
+    //     }
+
+    //     $orderData = LaravelSession::get('order_data');
+
+    //     $orderSuccess = $this->processOrderFromSession($orderData);
+
+    //     LaravelSession::forget('order_data'); // clear after processing
+
+    //     if ($orderSuccess) {
+    //         return redirect('/booking-history')->with('success', 'Payment successful. Order placed!');
+    //     } else {
+    //         return redirect('/schedule')->with('error', 'Payment succeeded but order failed. Please contact support.');
+    //     }
+    // }
+
+    public function successPage(){
         return view('stripe.success');
     }
 
-    
-    // public function createSession(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'order_name' => 'required|string',
-    //         'order_summary' => 'nullable|string',
-    //         'address' => 'required|string',
-    //         'pickup_date' => 'required|date',
-    //         'pickup_time_start' => 'required',
-    //         'pickup_time_end' => 'required',
-    //         'total_amount' => 'required|numeric|min:1',
-    //         'payment_method' => 'required|string|in:card,fpx,grabpay',
-    //     ]);
+    public function cancelPage(){
+        return view('stripe.cancel');
+    }
 
-    //     // 1. Generate reference number
-    //     $generatedReference = uniqid('REF-');
+    public function paymentSuccess(Request $request)
+    {
+        $sessionId = $request->query('session_id');  // get session_id from URL
 
-    //     // 2. Store order data in session
-    //     session([
-    //         'order_data' => [
-    //             'reference_number' => $generatedReference,
-    //             'address' => $request->address,
-    //             'pickup_date' => $request->pickup_date,
-    //             'pickup_time_start' => $request->pickup_time_start,
-    //             'pickup_time_end' => $request->pickup_time_end,
-    //             'total_amount' => $request->total_amount,
-    //             'payment_method' => $request->payment_method,
-    //         ]
-    //     ]);
+        if (!$sessionId) {
+            return redirect('/schedule')->with('error', 'No Stripe session ID found.');
+        }
 
-    //     // 3. Create Stripe session and redirect
-    //     \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-    //     $session = \Stripe\Checkout\Session::create([
-    //         'payment_method_types' => [$request->input('payment_method')],
-    //         'line_items' => [
-    //             [
-    //                 'price_data' => [
-    //                     'currency' => 'myr',
-    //                     'unit_amount' => intval($request->input('total_amount') * 100),
-    //                     'product_data' => [
-    //                         'name' => $request->input('order_name', 'Laundry Order'),
-    //                         'description' => $request->input('order_summary'),
-    //                     ],
-    //                 ],
-    //                 'quantity' => 1,
-    //             ]
-    //         ],
-    //         'mode' => 'payment',
-    //         'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
-    //         'cancel_url' => route('stripe.cancel'),
-    //         'customer_email' => $request->input('email'),
-    //     ]);
+        try {
+            // Retrieve the checkout session from Stripe
+            $checkoutSession = \Stripe\Checkout\Session::retrieve($sessionId);
 
-    //     return redirect($session->url);
-    // }
+            // Retrieve payment intent to get payment details
+            $paymentIntent = \Stripe\PaymentIntent::retrieve($checkoutSession->payment_intent);
 
-    // public function paymentSuccess(Request $request)
-    // {
-    //     // Retrieve order data from session or request (you must store it before redirecting to Stripe)
-    //     $orderData = session('order_data'); // Example: you stored all order info in session
+            // You can now access payment info like:
+            $amountReceived = $paymentIntent->amount_received / 100;  // amount in your currency units
+            $currency = strtoupper($paymentIntent->currency);
+            $paymentStatus = $paymentIntent->status;  // 'succeeded', 'requires_payment_method', etc.
+            $paymentMethod = $paymentIntent->payment_method_types[0] ?? null;
 
-    //     if ($orderData) {
-    //         $order = new \App\Models\Order();
-    //         // $order->user_id = auth()->id();
-    //         $order->reference_number = $orderData['reference_number'];
-    //         $order->address = $orderData['address'];
-    //         $order->pickup_date = $orderData['pickup_date'];
-    //         $order->pickup_time_start = $orderData['pickup_time_start'];
-    //         $order->pickup_time_end = $orderData['pickup_time_end'];
-    //         $order->total_amount = $orderData['total_amount'];
-    //         $order->order_status = 'paid';
-    //         $order->payment_method = $orderData['payment_method'];
-    //         $order->save();
+            // Retrieve customer email from session or PaymentIntent charges
+            $customerEmail = $checkoutSession->customer_email;
 
-    //         // Optionally clear the session
-    //         session()->forget('order_data');
-    //     }
+        } catch (\Exception $e) {
+            \Log::error('Stripe payment success retrieval error: ' . $e->getMessage());
+            return redirect('/schedule')->with('error', 'Unable to verify payment. Please contact support.');
+        }
 
-    //     return view('stripe.success');
-    // }
+        // Now you have $checkoutSession and $paymentIntent, you can proceed to
+        // - Process your order (use your existing processOrderFromSession)
+        // - Save payment data to your payment table
 
-//     public function paymentSuccess(Request $request)
-// {
-//     // Retrieve order data from session
-//     $orderData = session('order_data');
+        if (!LaravelSession::has('order_data')) {
+            return redirect('/schedule')->with('error', 'No order data found.');
+        }
 
-//     // Ensure all required fields are present
-//     if (
-//         !$orderData ||
-//         empty($orderData['reference_number']) ||
-//         empty($orderData['address']) ||
-//         empty($orderData['pickup_date']) ||
-//         empty($orderData['pickup_time_start']) ||
-//         empty($orderData['pickup_time_end']) ||
-//         empty($orderData['total_amount']) ||
-//         empty($orderData['payment_method'])
-//     ) {
-//         return redirect()->route('stripe.cancel')->with('error', 'Order session is invalid or missing. Please try again.');
-//     }
+        $orderData = LaravelSession::get('order_data');
 
-//     // Save order
-//     $order = new \App\Models\Order();
-//     $order->reference_number = $orderData['reference_number'];
-//     $order->address = $orderData['address'];
-//     $order->pickup_date = $orderData['pickup_date'];
-//     $order->pickup_time_start = $orderData['pickup_time_start'];
-//     $order->pickup_time_end = $orderData['pickup_time_end'];
-//     $order->total_amount = $orderData['total_amount'];
-//     $order->order_status = 'paid';
-//     $order->payment_method = $orderData['payment_method'];
-//     $order->save();
+        $orderSuccess = $this->processOrderFromSession($orderData);
 
-//     // Clear session after saving
-//     session()->forget('order_data');
+        if ($orderSuccess) {
+            $user = Auth::user();
 
-//     return view('stripe.success');
-// }
+            // Find the latest order for this user (you might want to improve this logic)
+            $order = Order::where('customer_id', $user->id)->orderBy('created_at', 'desc')->first();
+
+            // Save payment to DB
+            Payment::create([
+                'amount' => $amountReceived,
+                'payment_status' => $paymentStatus,
+                'payment_date' => now(),
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'stripe_email' => $customerEmail,
+                'stripe_payment_intent_id' => $checkoutSession->payment_intent,
+                'stripe_charge_id' => $paymentIntent->charges->data[0]->id ?? null,
+                'currency' => $currency,
+                'payment_method' => $paymentMethod,
+                'payment_response' => json_encode($paymentIntent),  // store full payment intent JSON if needed
+            ]);
+
+            LaravelSession::forget('order_data'); // clear session
+
+            // return redirect('/payment/success')->with('success', 'Payment successful. Order placed!');
+            return redirect()->route('stripe.success.page')->with('success', 'Payment successful. Order placed!');
+
+        } else {
+            LaravelSession::forget('order_data');
+            return redirect('/schedule')->with('error', 'Payment succeeded but order failed. Please contact support.');
+        }
+    }
 
 
     public function paymentCancel()
     {
-        return view('stripe.cancel');
+        LaravelSession::forget('order_data'); // clear any temp data
+        // return redirect('/payment/cancel')->with('error', 'Payment was cancelled. Please try again.');
+        return redirect()->route('stripe.cancel.page')->with('error', 'Payment was cancelled. Please try again.');
     }
+
+    public function orderSession(Request $request){
+
+        LaravelSession::put('order_data', $request->all());
+        try {
+            // Store order data in session
+            LaravelSession::put('order_data', $request->all());
+
+            // Optional: Check if session was set
+            if (LaravelSession::has('order_data')) {
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Failed to store session data']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+
+    }
+
+    private function processOrderFromSession($orderData)
+    {
+        $user = Auth::user();
+
+        $pickupTimeStart = Carbon::parse($orderData['pickup_time_start'])->format('H:i:s');
+        $pickupTimeEnd = Carbon::parse($orderData['pickup_time_end'])->format('H:i:s');
+
+        DB::beginTransaction();
+        try {
+            // Step 1: Create Order
+            $orderInstance = new Order();
+            $referenceNumber = $orderInstance->generateUniqueReferenceNumber();
+
+            $order = Order::create([
+                'address' => $orderData['address'],
+                'pickup_date' => $orderData['pickup_date'],
+                'pickup_time_start' => $pickupTimeStart,
+                'pickup_time_end' => $pickupTimeEnd,
+                'delivery_timing' => $orderData['delivery_timing'] ?? null,
+                'delivery_fee' => $orderData['delivery_fee'] ?? 0,
+                'driver_id' => $orderData['driver_id'],
+                'customer_id' => $user->id,
+                'voucher_id' => $orderData['voucher_id'] ?? null,
+                'voucher_amount' => $orderData['voucher_amount'] ?? 0,
+                'reference_number' => $referenceNumber,
+                'subtotal' => $orderData['sub_total'],
+                'total_amount' => $orderData['total_amount'],
+                'order_status' => $orderData['order_status'],
+                'remark' => $orderData['remark'] ?? null,
+            ]);
+
+            // Step 2: Transfer service cart items
+            $cartItems = ServiceCart::with(['service', 'bagDetail'])->where('user_id', $user->id)->get();
+
+            foreach ($cartItems as $item) {
+                OrderedService::create([
+                    'order_id' => $order->id,
+                    'service_id' => $item->service_management_id,
+                    'price' => $item->bagDetail ? $item->bagDetail->price : $item->service->pieces_price,
+                    'qty' => $item->quantity,
+                    'selected_bag_size' => $item->bagDetail ? $item->bagDetail->bag_size : null,
+                    'selected_bag_size_id' => $item->bagDetail ? $item->bagDetail->id : null,
+                ]);
+            }
+
+            // Step 3: Clear cart
+            ServiceCart::where('user_id', $user->id)->delete();
+
+            DB::commit();
+
+            return true;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Order submission failed after payment: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
 }
 

@@ -5,6 +5,16 @@
         </h2>
     </x-slot>
 
+    @if (session('error'))
+        <script>
+            alert("{{ session('error') }}");
+        </script>
+    @endif
+
+
+    <div id="loader-overlay" style="display: none;">
+        <div class="loader"></div>
+    </div>
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" style="min-height: calc(100vh - 190px);">
 
 
@@ -120,7 +130,7 @@
         </button>
     </div>
 @endforeach
-                            
+
                             @push('scripts')
                             <script>
                             $(document).on('click', '.btn-select-delivery', function () {
@@ -391,7 +401,6 @@
 
 
         $(document).on('click', '.btn-continue', function () {
-            // console.log('btn-continue clicked, currentPharse:', currentPharse);
             pickupDate = $('#pickup_date').val();
             pickupTime = $('#pickup_time').val();
 
@@ -476,7 +485,7 @@
 
         // });
 
-                if(currentPharse == 'delivery'){
+            if(currentPharse == 'delivery'){
                 getDriverList();
             }else if(currentPharse == 'driver'){
                 if(selectedDriveId != 0){
@@ -499,9 +508,22 @@
 
                 address = `${address1} ${address2} ,${postcode} ${city}, ${state}`;
                 toPayment();
-            console.log('Current phase:', payment);
+
             }else if(currentPharse == 'payment'){
                 // Build order summary string from cartData
+                submitOrder();
+                return;
+
+            }else{
+                console.log('Error: Unknown phase');
+                return;
+            }
+        });
+
+        function submitOrder(){
+
+            if (confirm("Are you sure you want to submit the order?")) {
+
                 let orderSummaryString = '';
                 cartData.forEach(item => {
                     orderSummaryString += `${item.service.service_name} x${item.quantity || 1}, `;
@@ -515,43 +537,11 @@
                 $('#stripe-order-summary').val(orderSummaryString);
                 $('#stripe-email').val(userEmail);
                 $('#stripe-payment-method').val($('#payment_method').val() || 'card');
-
-                // $('#stripe-reference-number').val(generatedReference); // generate or get from backend
-                // // $('#stripe-address').val(address); // build from address fields
-                // $('#stripe-address').val(
-                //     $('#address1').val() + ', ' +
-                //     $('#address2').val() + ', ' +
-                //     $('#postcode').val() + ', ' +
-                //     $('#city').val() + ', ' +
-                //     $('#state').val()
-                // );
-                // $('#stripe-pickup-date').val(pickupDate);
-                // $('#stripe-pickup-time-start').val(pickupTime.split(' - ')[0]);
-                // $('#stripe-pickup-time-end').val(pickupTime.split(' - ')[1]);
-                // $('#stripe-delivery-timing').val(deliveryTiming);
-                // $('#stripe-total-amount').val(finaltotal);
-                // $('#stripe-order-summary').val(orderSummaryString);
-                // $('#stripe-order-name').val('Laundry Order');
-                // $('#stripe-email').val(userEmail);
-                // $('#stripe-payment-method').val($('#payment_method').val() || 'card');
-
-                // Submit the form as a normal POST
-                $('#stripe-payment-form')[0].submit();
-                return;
-                        
-                    }else{
-                        console.log('Error: Unknown phase');
-                        return;
-                    }
-        });
-
-        function submitOrder(){
-
-            if (confirm("Are you sure you want to submit the order?")) {
-
                 remark = $('#remark').val();
+                $('#loader-overlay').fadeIn();
                 $.ajax({
-                    url: '/api/service-cart/submit-order',
+                    //url: '/api/service-cart/submit-order',
+                    url: '/order-session',
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -567,20 +557,30 @@
                         sub_total: subTotal,
                         total_amount: finaltotal,
                         order_status: 'pending',
-                        remark: remark
+                        remark: remark,
+                        stripe_order_name: $('#stripe-order-name').val(),
+                        stripe_total_amount: $('#stripe-total-amount').val(),
+                        stripe_order_summary: $('#stripe-order-summary').val(),
+                        stripe_email: $('#stripe-email').val(),
+                        stripe_payment_method: $('#stripe-payment-method').val(),
                     },
                     success: function (response) {
                         // Handle success response here
-                        console.log(response);
                         if(response.success){
-                            alert('Order submitted successfully!');
-                            window.location.href = '/booking-history';
+
+
+
+                            // Submit the form as a normal POST
+                            $('#stripe-payment-form')[0].submit();
+
                         }else{
                             alert('Submit failed!');
+                            $('#loader-overlay').fadeOut();
                         }
                     },
                     error: function (xhr, status, error) {
                         // Handle error response here
+                        $('#loader-overlay').fadeOut();
                         console.error(xhr.responseText);
                     }
                 });
@@ -1293,7 +1293,7 @@ function renderPaymentLayout(){
                                     </div>
                                 </div>
                             </div>`;
-            
+
             $('.section-driver').addClass('hidden');
             $('.section-delivery').addClass('hidden');
             $('.section-address').html(content);
@@ -1342,7 +1342,7 @@ function renderPaymentLayout(){
             selectedDriveId = 0;
             voucherId = 0;
             remark = '';
-            
+
             deliveryFee = getDeliveryFeeByCity($('#city').val());
             finaltotal = parseFloat(subTotal) + parseFloat(deliveryFee) - parseFloat(voucherAmount); // Fix here too
             $('#grand-total').html(`RM${finaltotal.toFixed(2)}`);
@@ -1356,6 +1356,14 @@ function renderPaymentLayout(){
         @csrf
     </form> -->
 
+    <!-- <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
+        @csrf
+        <input type="hidden" name="total_amount" id="stripe-total-amount" value="">
+        <input type="hidden" name="order_summary" id="stripe-order-summary" value="">
+        <input type="hidden" name="order_name" id="stripe-order-name" value="">
+        <input type="hidden" name="email" id="stripe-email" value="">
+    </form> -->
+
     <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
         @csrf
         <input type="hidden" name="total_amount" id="stripe-total-amount" value="">
@@ -1364,21 +1372,6 @@ function renderPaymentLayout(){
         <input type="hidden" name="email" id="stripe-email" value="">
         <input type="hidden" name="payment_method" id="stripe-payment-method" value="card">
     </form>
-
-    <!-- <form id="stripe-payment-form" action="{{ route('stripe.simulated') }}" method="POST" class="hidden">
-        @csrf
-        <input type="hidden" name="reference_number" id="stripe-reference-number" value="">
-        <input type="hidden" name="address" id="stripe-address" value="">
-        <input type="hidden" name="pickup_date" id="stripe-pickup-date" value="">
-        <input type="hidden" name="pickup_time_start" id="stripe-pickup-time-start" value="">
-        <input type="hidden" name="pickup_time_end" id="stripe-pickup-time-end" value="">
-        <input type="hidden" name="delivery_timing" id="stripe-delivery-timing" value="">
-        <input type="hidden" name="total_amount" id="stripe-total-amount" value="">
-        <input type="hidden" name="order_summary" id="stripe-order-summary" value="">
-        <input type="hidden" name="order_name" id="stripe-order-name" value="">
-        <input type="hidden" name="email" id="stripe-email" value="">
-        <input type="hidden" name="payment_method" id="stripe-payment-method" value="card">
-    </form> -->
 
 </x-app-layout>
 

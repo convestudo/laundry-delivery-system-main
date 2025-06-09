@@ -35,7 +35,7 @@ class CustomerBookController extends Controller
         //            ->where('customer_id', auth()->user()->id)
         //            ->orderByDesc('created_at')
         //            ->paginate(10);
-        $query = Order::with(['driver', 'orderedServices.service', 'orderedServices.selectedBagDetail'])->where('customer_id', auth()->user()->id);
+        $query = Order::with(['payment', 'driver', 'orderedServices.service', 'orderedServices.selectedBagDetail'])->where('customer_id', auth()->user()->id);
 
         // Filter by reference number
         if ($request->filled('reference_number')) {

@@ -5,6 +5,13 @@
         </h2>
     </x-slot>
 
+    @if (session('success'))
+        <script>
+            alert("{!! addslashes(session('success')) !!}");
+        </script>
+    @endif
+
+
     @include('components.book-now')
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" style="min-height: calc(100vh - 190px);">
@@ -48,13 +55,15 @@
                             <th class="border border-gray-300 px-4 py-2">Pickup Date</th>
                             <th class="border border-gray-300 px-4 py-2">Time</th>
                             <th class="border border-gray-300 px-4 py-2">Total</th>
-                            <th class="border border-gray-300 px-4 py-2">Payment Method</th> <!-- Payment Method -->
+                            <th class="border border-gray-300 px-4 py-2">Payment Method</th>
                             <th class="border border-gray-300 px-4 py-2">Status</th>
                             <th class="border border-gray-300 px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+
                         @foreach ($orders as $order)
+
                             <tr class="text-gray-800">
                                 <td class="border border-gray-300 px-4 py-2 text-nowrap">{{ $order->reference_number }}</td>
                                 <td class="border border-gray-300 px-4 py-2">{{ $order->address }}</td>
@@ -65,7 +74,10 @@
                                     {{ \Carbon\Carbon::parse($order->pickup_time_start)->format('g:i A') }} -
                                     {{ \Carbon\Carbon::parse($order->pickup_time_end)->format('g:i A') }}
                                 </td>
+
                                 <td class="border border-gray-300 px-4 py-2 text-nowrap">RM {{ number_format($order->total_amount, 2) }}</td>
+                                <td class="border border-gray-300 px-4 py-2 text-nowrap uppercase">{{ $order->payment ? $order->payment->payment_method : '-' }}</td>
+
                                 @php
 
                                     $statusClass = '';
@@ -83,7 +95,6 @@
                                             $statusClass = 'text-gray-600';
                                     }
                                 @endphp
-                                <td class="border border-gray-300 px-4 py-2">{{ ucfirst($order->payment_method) }}</td> <!-- Show payment method -->
                                 <td class="border border-gray-300 px-4 py-2 capitalize font-600  {{$statusClass}}">{{ $order->order_status }}</td>
                                 <td class="border border-gray-300 px-4 py-2">
                                     <a href="{{ route('customer.order.detail', $order->id) }}"

@@ -55,7 +55,7 @@
                                         <!-- <td class="border px-4 py-2">RM{{ number_format($charge->total_price, 2) }}</td> -->
                                         <td class="border px-4 py-2">
                                             <div class="flex justify-start space-x-4">
-                                                <!-- <a href="{{ route('extra_charges.edit', $charge->id) }}" 
+                                                <!-- <a href="{{ route('extra_charges.edit', $charge->id) }}"
                                                 style="display: flex; align-items: center; gap: 6px; background-color: #2563eb; color: white; text-decoration: none; padding: 6px 12px; border-radius: 6px;">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -78,7 +78,7 @@
                                                     Update
                                                 </a> -->
 
-                                                <!-- <form action="{{ route('extra_charges.destroy', $charge->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this extra charge?');">
+                                                {{-- <!-- <form action="{{ route('extra_charges.destroy', $charge->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this extra charge?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button style="display: flex; align-items: center; gap: 8px; background-color: red; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
@@ -91,10 +91,8 @@
                                                     </svg>
                                                     Delete
                                                 </button>
-                                            </form> -->
-                                            <form action="{{ route('extra_charges.destroy', $charge->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this extra charge?');">
-
-
+                                            </form> --> --}}
+                                            <form action="{{ route('extra_charges.destroy', $charge->chargeID) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this extra charge?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button style="display: flex; align-items: center; gap: 8px; background-color: red; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">

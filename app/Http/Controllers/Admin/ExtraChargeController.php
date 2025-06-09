@@ -139,27 +139,36 @@ class ExtraChargeController extends Controller
     //     return redirect()->route('extra_charges.index')->with('success', 'Extra charge deleted successfully.');
     // }
 
-    
+
     // public function destroy(ExtraCharge $extra_charge)
     // {
     //     $extra_charge->delete();
     //     return redirect()->route('extra_charges.index')->with('success', 'Extra charge deleted successfully.');
     // }
 
+    // public function destroy(ExtraCharge $extra_charge)
+    // {
+
+    //     // $id = $extra_charge->id;
+    //     $extra_charge->delete();
+
+    //     // Check if the record still exists
+    //     // $exists = \App\Models\ExtraCharge::find($id);
+
+    //     // if ($exists) {
+    //     //     return redirect()->route('extra_charges.index')->with('error', 'Delete failed!');
+    //     // } else {
+    //         return redirect()->route('extra_charges.index')->with('success', 'Extra charge deleted successfully.');
+    //     // }
+    // }
+
     public function destroy(ExtraCharge $extra_charge)
     {
-        $id = $extra_charge->id;
         $extra_charge->delete();
-
-        // Check if the record still exists
-        $exists = \App\Models\ExtraCharge::find($id);
-
-        if ($exists) {
-            return redirect()->route('extra_charges.index')->with('error', 'Delete failed!');
-        } else {
-            return redirect()->route('extra_charges.index')->with('success', 'Extra charge deleted successfully.');
-        }
+        return redirect()->route('extra_charges.index')->with('success', 'Extra charge deleted successfully.');
     }
+
+
 
 
     // public function destroy($id)

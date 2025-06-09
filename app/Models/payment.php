@@ -15,6 +15,12 @@ class Payment extends Model
         'payment_date',
         'user_id',
         'order_id',
+        'stripe_email',
+        'stripe_payment_intent_id',
+        'stripe_charge_id',
+        'currency',
+        'payment_method',
+        'payment_response',
     ];
 
     public function user()

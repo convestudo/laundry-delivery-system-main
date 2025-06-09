@@ -67,6 +67,7 @@
                                     <th class="border border-gray-300 px-4 py-2">Address</th>
                                     <th class="border border-gray-300 px-4 py-2">Pickup Date/Time</th>
                                     <th class="border border-gray-300 px-4 py-2">Total</th>
+                                    <th class="border border-gray-300 px-4 py-2">Payment Method</th>
                                     <th class="border border-gray-300 px-4 py-2">Status</th>
                                     <th class="border border-gray-300 px-4 py-2">Actions</th>
                                 </tr>
@@ -83,6 +84,7 @@
                                         </td>
 
                                         <td class="border border-gray-300 px-4 py-2 text-nowrap">RM {{ number_format($order->total_amount, 2) }}</td>
+                                        <td class="border border-gray-300 px-4 py-2 text-nowrap uppercase">{{ $order->payment ? $order->payment->payment_method : '-' }}</td>
                                         <td class="border border-gray-300 px-4 py-2 capitalize" >{{ $order->order_status }}</td>
                                         <!-- <td class="border border-gray-300 px-4 py-2 capitalize">
                                             <form action="{{ route('order.updateStatus', $order->id) }}" method="POST" class="inline update-status-form">
