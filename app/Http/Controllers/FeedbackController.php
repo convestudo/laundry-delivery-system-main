@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\feedback;
+use App\Models\Feedback;
 use App\Models\Order;
 use App\Models\OrderedService;
 use Illuminate\Http\Request;
