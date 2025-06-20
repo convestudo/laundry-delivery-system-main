@@ -65,10 +65,23 @@ use App\Http\Controllers\Admin\ExtraChargeController;
 
 
 Route::post('/pay-simulated', [StripePaymentController::class, 'createSession'])->name('stripe.simulated');
+Route::any('/pay-simulated-retry/{id}', [StripePaymentController::class, 'createSessionRetry'])->name('pay-simulated-retry');
+
 Route::get('/payment/success/call', [StripePaymentController::class, 'paymentSuccess'])->name('stripe.success');
+Route::get('/payment/success/callretry', [StripePaymentController::class, 'paymentSuccessRetry'])->name('stripe.successretry');
+Route::get('/payment/success/callextra', [StripePaymentController::class, 'paymentSuccessExtra'])->name('stripe.successextra');
+
 Route::get('/payment/cancel/call', [StripePaymentController::class, 'paymentCancel'])->name('stripe.cancel');
+Route::get('/payment/cancel/callretry', [StripePaymentController::class, 'paymentCancelRetry'])->name('stripe.cancelretry');
+Route::get('/payment/cancel/callextra', [StripePaymentController::class, 'paymentCancelExtra'])->name('stripe.cancelextra');
+
 Route::get('/payment/success', [StripePaymentController::class, 'successPage'])->name('stripe.success.page');
+Route::get('/payment/success/extra', [StripePaymentController::class, 'successPageExtra'])->name('stripe.success.page.extra');
+
+
 Route::get('/payment/cancel', [StripePaymentController::class, 'cancelPage'])->name('stripe.cancel.page');
+Route::get('/payment/cancel/extra', [StripePaymentController::class, 'cancelPageExtra'])->name('stripe.cancel.page.extra');
+
 Route::post('/order-session', [StripePaymentController::class, 'orderSession'])->name('stripe.order-session');
 
 
@@ -104,7 +117,20 @@ Route::middleware('auth')->group(function () {
 
 
 
+
+
+//     Route::get('/extra-charges/reminder/{id}', function ($id) {
+//     $charge = \App\Models\ExtraCharge::findOrFail($id);
+//     return view('extra_charges.tts_reminder', compact('charge'));
+// })->name('extra_charges.tts');
+
+// // Route::get('extra-charges/reminder/{id}', [ExtraChargesController::class, 'tts'])->name('extra_charges.tts');
+// Route::get('/extra-charges/reminder/{id}', [ExtraChargeController::class, 'tts'])->name('extra_charges.tts');
+
+
     Route::patch('/order/{order}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
+    Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('cancel-order');
+
 
     Route::get('/feedback/order/{feedback}', [FeedbackController::class, 'showDetail'])->name('feedback.order.show');
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
@@ -149,7 +175,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('/');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -193,3 +219,9 @@ Route::get('/orders/export/all', [OrderController::class, 'exportAllPdf'])->name
 
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/extra-charges/pay/{id}', [ExtraChargeController::class, 'showPaymentPage'])->name('extra_charges.pay');
+Route::post('/extra-charges/pay-now/{id}', [StripePaymentController::class, 'payNow'])->name('extra_charges.pay_now');
+
+

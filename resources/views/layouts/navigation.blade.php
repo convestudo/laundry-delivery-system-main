@@ -11,13 +11,26 @@
             </div>
 
             @if(auth()->user()->role === 'customer')
+
+            @php
+            $unreadCount = DB::table('ch_messages')->where('to_id',auth()->user()->id)->where('seen','0')->count()
+            @endphp
                 <div class="gap-6 items-center hidden md:flex basis-8/12 justify-center">
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">Home</a>
                     <a href="{{ route('services-list.index') }}" class="{{ request()->routeIs('services-list.index') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">Services Info</a>
                     <a href="{{ route('vouchers-list.index') }}" class="{{ request()->routeIs('vouchers-list.index') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">Vouchers</a>
                     <a href="{{ route('customer-booking.index') }}" class="{{ request()->routeIs('customer-booking.index') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">Book Now</a>
                     <a href="{{ route('history.index') }}" class="{{ request()->routeIs('history.index') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">My Bookings</a>
-                    <a href="{{ route('chatify') }}" class="{{ request()->is('chat*') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">Chat</a>
+                    <!-- <a href="{{ route('chatify') }}" class="{{ request()->is('chat*') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">Chat</a> -->
+                 <a href="{{ route('chatify') }}" 
+   class="{{ request()->is('chat*') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold relative">
+    Chat
+    <span id="chat-notification-badge"
+          class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+        {{ $unreadCount ?? 0 }}
+    </span>
+</a>
+
                 </div>
             @endif
 

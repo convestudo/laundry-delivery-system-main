@@ -466,7 +466,7 @@
                     </div>
 
                     <!-- Completed Orders -->
-                    <div class="bg-blue-100 text-blue-800 shadow-xl border border-purple-300 rounded-2xl p-6 text-center">
+                    <div class="bg-blue-100 text-blue-800 shadow-xl border border-blue-300 rounded-2xl p-6 text-center">
                         <div class="flex justify-center mb-3">
                             <svg id='Order_Completed_55' width='55' height='55' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='48' height='48' stroke='none' fill='#000000' opacity='0'/>
                                 <g transform="matrix(0.92 0 0 0.92 24 24)" >
@@ -528,7 +528,7 @@
                     </div>
 
                     <!-- Average Rating -->
-                    <div class="bg-pink-100 text--800 shadow-xl border border-blue-300 rounded-2xl p-6 text-center">
+                    <div class="bg-pink-100 text-pink-800 shadow-xl border border-pink-300 rounded-2xl p-6 text-center">
                         <div class="flex justify-center mb-3">
                             <svg id='Rating_55' width='55' height='55' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='48' height='48' stroke='none' fill='#000000' opacity='0'/>
                             <g transform="matrix(0.55 0 0 0.55 24 24)" >
@@ -572,16 +572,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($userFeedback as $f)
+    @foreach ($userFeedback as $f)
+        <tr class="text-gray-800">
+            <td class="border px-4 py-2 text-nowrap">
+                <a class="underline" href="{{ route('feedback.order.show', $f->id) }}">#{{ $f->reference_number }}</a>
+            </td>
 
-                                        <tr class="text-gray-800">
-                                            <td class="border px-4 py-2 text-nowrap"><a class="underline" href="{{ route('feedback.order.show', $f->id) }}">#{{ $f->reference_number }}</a></td>
-                                            <td class="border px-4 py-2">{{ $f->feedback->driver_rating }} <i class="fa-solid fa-star text-yellow-400"></i></td>
-                                            <td class="border px-4 py-2">{{ $f->feedback->driver_comment }}</td>
-                                            <td class="border px-4 py-2 text-nowrap">{{ \Carbon\Carbon::parse($f->feedback->feedback_date)->format('M d, Y') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+            @if ($f->feedback)
+                <td class="border px-4 py-2">
+                    {{ $f->feedback->driver_rating }} <i class="fa-solid fa-star text-yellow-400"></i>
+                </td>
+                <td class="border px-4 py-2">
+                    {{ $f->feedback->driver_comment }}
+                </td>
+                <td class="border px-4 py-2 text-nowrap">
+                    {{ \Carbon\Carbon::parse($f->feedback->feedback_date)->format('M d, Y') }}
+                </td>
+            @else
+                <td class="border px-4 py-2 text-gray-500 italic">No rating</td>
+                <td class="border px-4 py-2 text-gray-500 italic">No comment</td>
+                <td class="border px-4 py-2 text-gray-500 italic">No date</td>
+            @endif
+        </tr>
+    @endforeach
+</tbody>
+
                             </table>
 
                             <!-- Pagination -->

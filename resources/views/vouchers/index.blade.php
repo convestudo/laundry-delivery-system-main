@@ -45,34 +45,36 @@
                                         <td class="border px-4 py-2 capitalize">{{ $voucher->voucher_status }}</td>
                                         <td class="border px-4 py-2">{{ \Carbon\Carbon::parse($voucher->expired_at)->format('d M Y') }}</td>
 
-                                        <td class="border px-4 py-2">
-                                            <div class="flex justify-start space-x-4">
-                                                <!-- Edit button -->
-                                                <a href="{{ route('vouchers.edit', $voucher->id) }}" 
-                                                style="display: flex; align-items: center; gap: 6px; background-color: #2563eb; color: white; text-decoration: none; padding: 6px 12px; border-radius: 6px;">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                                        <path d="M16 5l3 3" />
-                                                    </svg>
-                                                    Update
-                                                </a>
+                                                    <td class="border px-2 py-2 text-center">
+                                                    <div class="flex justify-center items-center gap-10">
+                                                        <!-- Update button -->
+                                                        <a href="{{ route('vouchers.edit', $voucher->id) }}" 
+                                                        class="flex items-center gap-1 bg-blue-600 text-white no-underline px-3 py-2 rounded">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                                                <path d="M16 5l3 3" />
+                                                            </svg>
+                                                            Update
+                                                        </a>
 
-                                                <!-- Delete button -->
-                                                <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button style="display: flex; align-items: center; gap: 8px; background-color: red; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M4 7l16 0" />
-                                                            <path d="M10 11l0 6" />
-                                                            <path d="M14 11l0 6" />
-                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </form>
+                                                        <!-- Delete button -->
+                                                        <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" class="m-0">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="flex items-center gap-1 bg-red-600 text-white px-3 py-2 rounded border-0 cursor-pointer">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path d="M4 7l16 0" />
+                                                                    <path d="M10 11l0 6" />
+                                                                    <path d="M14 11l0 6" />
+                                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                </svg>
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
                                             </div>
                                         </td>
                                     </tr>

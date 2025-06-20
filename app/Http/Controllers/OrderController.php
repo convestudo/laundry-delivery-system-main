@@ -131,4 +131,23 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }
+
+    public function cancel(Order $order)
+{
+    // Optionally, check if the logged-in user is allowed to cancel this order
+    if ($order->customer_id !== auth()->id()) {
+        abort(403, 'Unauthorized');
+    }
+
+    // Only allow cancel if not already completed
+    if (in_array($order->order_status, ['completed', 'cancelled'])) {
+        return redirect()->route('history.index')->with('success', 'This order cannot be cancelled.');
+    }
+
+    // Cancel the order
+    $order->order_status = 'cancelled';
+    $order->save();
+
+    return redirect()->route('history.index')->with('success', 'Order has been cancelled successfully.');
+}
 }

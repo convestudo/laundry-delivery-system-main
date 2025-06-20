@@ -2,6 +2,12 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+         <!-- Welcome Title -->
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Please Register your account</h2>
+            <!-- <p class="text-sm text-gray-600">Please log in to your account to continue.</p> -->
+        </div>
+
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />

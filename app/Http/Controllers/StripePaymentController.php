@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExtraCharge;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Illuminate\Http\Request;
@@ -116,6 +117,36 @@ class StripePaymentController extends Controller
         return redirect($session->url);
     }
 
+     public function createSessionRetry($id,Request $request)
+    {
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        $order = Order::where('id',$id)->first();
+
+
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => [$request->method],
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'myr',
+                   'unit_amount' => intval($order->total_amount * 100),
+                        'product_data' => [
+                            'name' => 'Laundry Order'
+                        ],
+                    ],
+                    'quantity' => 1,
+                ]
+            ],
+            'mode' => 'payment',
+            'success_url' => route('stripe.successretry') . '?session_id={CHECKOUT_SESSION_ID}&id='.$id,
+            'cancel_url' => route('stripe.cancelretry'),
+            'customer_email' => auth()->user()->email
+        ]);
+
+        return redirect($session->url);
+    }
+
     // public function paymentSuccess(Request $request)
     // {
 
@@ -141,8 +172,18 @@ class StripePaymentController extends Controller
         return view('stripe.success');
     }
 
+    public function successPageExtra(){
+        return view('stripe.successextra');
+    }
+
+    
+
     public function cancelPage(){
         return view('stripe.cancel');
+    }
+
+        public function cancelPageExtra(){
+        return view('stripe.cancelextra');
     }
 
     public function paymentSuccess(Request $request)
@@ -220,12 +261,117 @@ class StripePaymentController extends Controller
         }
     }
 
-
-    public function paymentCancel()
+      public function paymentSuccessRetry(Request $request)
     {
-        LaravelSession::forget('order_data'); // clear any temp data
+        $sessionId = $request->query('session_id'); 
+        $id = $request->query('id'); 
+
+        if (!$sessionId) {
+            return redirect('/booking-history')->with('error', 'No Stripe session ID found.');
+        }
+
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+            // Retrieve the checkout session from Stripe
+            $checkoutSession = \Stripe\Checkout\Session::retrieve($sessionId);
+
+            // Retrieve payment intent to get payment details
+            $paymentIntent = \Stripe\PaymentIntent::retrieve($checkoutSession->payment_intent);
+
+            // You can now access payment info like:
+            $amountReceived = $paymentIntent->amount_received / 100;  // amount in your currency units
+            $currency = strtoupper($paymentIntent->currency);
+            $paymentStatus = $paymentIntent->status;  // 'succeeded', 'requires_payment_method', etc.
+            $paymentMethod = $paymentIntent->payment_method_types[0] ?? null;
+
+            // Retrieve customer email from session or PaymentIntent charges
+            $customerEmail = $checkoutSession->customer_email;
+
+        } catch (\Exception $e) {
+            \Log::error('Stripe payment success retrieval error: ' . $e->getMessage());
+            return redirect('/booking-history')->with('error', 'Unable to verify payment. Please contact support.');
+        }
+
+            $user = Auth::user();
+
+            $order = Order::where('id', $id)->first();
+            $order->order_status = 'pending';
+            $order->payment_status = 'Success';
+            $order->save();
+
+            Payment::create([
+                'amount' => $amountReceived,
+                'payment_status' => $paymentStatus,
+                'payment_date' => now(),
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'stripe_email' => $customerEmail,
+                'stripe_payment_intent_id' => $checkoutSession->payment_intent,
+                'stripe_charge_id' => $paymentIntent->charges->data[0]->id ?? null,
+                'currency' => $currency,
+                'payment_method' => $paymentMethod,
+                'payment_response' => json_encode($paymentIntent), 
+            ]);
+
+            return redirect()->route('stripe.success.page')->with('success', 'Payment successful. Order placed!');
+    }
+
+
+     public function paymentSuccessExtra(Request $request)
+    {
+        $id = $request->query('id'); 
+
+        $charge = ExtraCharge::findOrFail($id);
+        $charge->payment_status = 'Success';
+        $charge->save();
+
+        return redirect()->route('stripe.success.page.extra')->with('success', 'Payment successful. Order placed!');
+    }
+
+         public function paymentCancelExtra(Request $request)
+    {
+    
+        $id = $request->query('id'); 
+
+        $charge = ExtraCharge::findOrFail($id);
+        $charge->payment_status = 'Failed';
+        $charge->save();
+
+        return redirect()->route('stripe.cancel.page.extra')->with('success', 'Payment Failed. Please try again!');
+    }
+
+
+    public function paymentCancel(Request $request)
+    {
+ 
+        if (!LaravelSession::has('order_data')) {
+            return redirect('/schedule')->with('error', 'No order data found.');
+        }
+
+        $orderData = LaravelSession::get('order_data');
+
+        $orderSuccess = $this->processOrderFromSessionFailed($orderData);
+
+        if ($orderSuccess) {
+          
+
+            LaravelSession::forget('order_data'); // clear session
+
+            // return redirect('/payment/success')->with('success', 'Payment successful. Order placed!');
+    return redirect('/payment/cancel')->with('error', 'Payment was cancelled. Please try again.');
+        }
+        //LaravelSession::forget('order_data'); // clear any temp data
         // return redirect('/payment/cancel')->with('error', 'Payment was cancelled. Please try again.');
-        return redirect()->route('stripe.cancel.page')->with('error', 'Payment was cancelled. Please try again.');
+        //return redirect()->route('stripe.cancel.page')->with('error', 'Payment was cancelled. Please try again.');
+    }
+
+
+      public function paymentCancelRetry(Request $request)
+    {
+
+    return redirect('/payment/cancel')->with('error', 'Payment was cancelled. Please try again.');
+        
     }
 
     public function orderSession(Request $request){
@@ -276,6 +422,7 @@ class StripePaymentController extends Controller
                 'total_amount' => $orderData['total_amount'],
                 'order_status' => $orderData['order_status'],
                 'remark' => $orderData['remark'] ?? null,
+                'payment_status' => 'Success'
             ]);
 
             // Step 2: Transfer service cart items
@@ -306,6 +453,106 @@ class StripePaymentController extends Controller
         }
     }
 
+
+      private function processOrderFromSessionFailed($orderData)
+    {
+        $user = Auth::user();
+
+        $pickupTimeStart = Carbon::parse($orderData['pickup_time_start'])->format('H:i:s');
+        $pickupTimeEnd = Carbon::parse($orderData['pickup_time_end'])->format('H:i:s');
+
+        DB::beginTransaction();
+        try {
+            // Step 1: Create Order
+            $orderInstance = new Order();
+            $referenceNumber = $orderInstance->generateUniqueReferenceNumber();
+
+
+            
+
+            $order = Order::create([
+                'address' => $orderData['address'],
+                'pickup_date' => $orderData['pickup_date'],
+                'pickup_time_start' => $pickupTimeStart,
+                'pickup_time_end' => $pickupTimeEnd,
+                'delivery_timing' => $orderData['delivery_timing'] ?? null,
+                'delivery_fee' => $orderData['delivery_fee'] ?? 0,
+                'driver_id' => $orderData['driver_id'],
+                'customer_id' => $user->id,
+                'voucher_id' => $orderData['voucher_id'] ?? null,
+                'voucher_amount' => $orderData['voucher_amount'] ?? 0,
+                'reference_number' => $referenceNumber,
+                'subtotal' => $orderData['sub_total'],
+                'total_amount' => $orderData['total_amount'],
+                'order_status' => 'payment failed',
+                'remark' => $orderData['remark'] ?? null,
+                 'payment_status' => 'Failed'
+            ]);
+
+         
+
+            // Step 2: Transfer service cart items
+            $cartItems = ServiceCart::with(['service', 'bagDetail'])->where('user_id', $user->id)->get();
+
+            foreach ($cartItems as $item) {
+                OrderedService::create([
+                    'order_id' => $order->id,
+                    'service_id' => $item->service_management_id,
+                    'price' => $item->bagDetail ? $item->bagDetail->price : $item->service->pieces_price,
+                    'qty' => $item->quantity,
+                    'selected_bag_size' => $item->bagDetail ? $item->bagDetail->bag_size : null,
+                    'selected_bag_size_id' => $item->bagDetail ? $item->bagDetail->id : null,
+                ]);
+            }
+
+            // Step 3: Clear cart
+            ServiceCart::where('user_id', $user->id)->delete();
+
+            DB::commit();
+
+            return true;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Order submission failed after payment: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    public function payNow(Request $request, $id)
+{
+    $request->validate([
+        'payment_method' => 'required|in:card,fpx,grabpay',
+    ]);
+
+    $charge = ExtraCharge::findOrFail($id);
+
+            \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => [$request->input('payment_method')],
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'myr',
+                        'unit_amount' => intval($charge->extra_charge * 100),
+                        'product_data' => [
+                            'name' => 'Extra Charges',
+                            'description' => $charge->service_name,
+                        ],
+                    ],
+                    'quantity' => 1,
+                ]
+            ],
+            'mode' => 'payment',
+            'success_url' => route('stripe.successextra') . '?session_id={CHECKOUT_SESSION_ID}&id='.$id,
+            'cancel_url' => route('stripe.cancelextra'). '?session_id={CHECKOUT_SESSION_ID}&id='.$id,
+            'customer_email' => $charge->email,
+        ]);
+
+        return redirect($session->url);
+}
 
 }
 

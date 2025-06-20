@@ -22,7 +22,7 @@ class ExtraCharge extends Model
     protected $fillable = [
         'user_id', 'service_name', 'package_weight',
         'bag_size', 'capacity_exceeded',
-        'extra_charge', 'total_price',
+        'extra_charge', 'total_price','email'
     ];
 
     public function user()

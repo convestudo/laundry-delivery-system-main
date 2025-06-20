@@ -73,7 +73,8 @@
                                         <td class="border px-4 py-2">{{ $feedback->feedback_content }}</td>
                                         <td class="border px-4 py-2 text-nowrap">{{ \Carbon\Carbon::parse($feedback->feedback_date)->format('M d, Y') }}</td>
                                         <td class="border px-4 py-2">{{ $feedback->rating }} <i class="fa-solid fa-star text-yellow-400"></i></td>
-                                        <td class="border px-4 py-2">
+                                        <td class="border px-2 py-2 text-center">
+                                                    <div class="flex justify-center items-center gap-3">
                                             <form action="{{ route('feedback.destroy', $feedback->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')

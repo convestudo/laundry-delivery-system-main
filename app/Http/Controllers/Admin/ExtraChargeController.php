@@ -63,6 +63,7 @@ class ExtraChargeController extends Controller
             'capacity_exceeded' => $validated['capacity_exceeded'],
             'extra_charge' => $validated['extra_charge'],
             'total_price' => $total_price,
+            'email' => $user->email
         ]);
 
         Mail::to($user->email)->send(new ExtraChargeMail($charge));
@@ -188,5 +189,12 @@ class ExtraChargeController extends Controller
 
         return redirect()->route('extra_charges.index')->with('success', 'Extra charge restored successfully!');
     }
+
+    public function showPaymentPage($id)
+{
+    $charge = ExtraCharge::with('user')->findOrFail($id);
+
+    return view('extra_charges.payment', compact('charge'));
+}
 
 }
