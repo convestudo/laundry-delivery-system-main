@@ -1,7 +1,7 @@
-<div>
-    <img src="{{ asset('assets/images/banner.png') }}"  class="rounded-0 object-cover w-full h-96">
+<div class="w-full">
+    <img src="{{ asset('assets/images/banner.png') }}" 
+         class="w-full h-auto sm:h-96 object-cover">
 </div>
-
 
 
 <section class="ry-section mt-10">

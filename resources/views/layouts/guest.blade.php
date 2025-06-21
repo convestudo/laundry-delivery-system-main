@@ -14,7 +14,6 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Static Background Image Styling -->
     <style>
         html, body {
             height: 100%;
@@ -23,32 +22,51 @@
         }
 
         body {
-            min-height: 100vh;
-            background: url('{{ asset('assets/images/gif6.gif') }}') no-repeat top right;
-            background-size: 2100px 800px;
             background-color: #f7f7f7;
+            background-image: url('{{ asset('assets/images/gif6.gif') }}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
         @media (max-width: 1024px) {
             body {
-                background-size: 350px 450px;
+                background-size: contain;
+                background-position: top center;
+                background-attachment: scroll;
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             body {
-                background-size: 250px 350px;
+                background-size: 100% auto;
+                background-position: top center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                background-size: cover;
                 background-position: bottom right;
+            }
+
+            .form-container {
+                padding: 1.25rem !important;
+            }
+
+            .logo-img {
+                width: 120px !important;
             }
         }
     </style>
 </head>
 <body class="font-sans text-gray-900 antialiased">
-    <div class="h-screen flex items-center justify-center px-4">
-        <div class="w-full sm:max-w-md bg-white bg-opacity-80 px-6 py-6 shadow-50 rounded-lg">
+    <div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md bg-white bg-opacity-90 px-6 py-6 shadow-2xl rounded-xl form-container">
             <div class="flex justify-center mb-4">
                 <a href="/">
-                    <img src="{{ asset('assets/images/logo 2.png') }}" alt="Logo" style="width: 150px; height: auto;">
+                    <img src="{{ asset('assets/images/logo 2.png') }}" alt="Logo" class="logo-img" style="width: 150px; height: auto;">
                 </a>
             </div>
 

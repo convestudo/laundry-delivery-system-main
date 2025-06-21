@@ -15,7 +15,9 @@
 
     .banner-img {
       width: 100%;
-      height: 24rem;
+      height: auto;
+      max-height: 24rem;
+      object-fit: cover;
       display: block;
     }
 
@@ -47,6 +49,18 @@
       margin: 10px;
       width: 130px;
     }
+
+    @media (max-width: 576px) {
+      .welcome-card {
+        padding: 20px;
+      }
+
+      .btn-custom {
+        width: 100px;
+        font-size: 14px;
+        margin: 5px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -66,7 +80,7 @@
       <h2>Welcome to Royal Doby</h2>
       <p class="lead">Same day laundry pickup and delivery in <b>Parit Raja</b> and <b>Batu Pahat</b></p>
       <p>Pickup before <strong>11:00 AM</strong> for same-day delivery or receive it the next day!</p>
-      <div class="d-flex justify-content-center mt-4">
+      <div class="d-flex justify-content-center mt-4 flex-wrap">
         <a href="{{ route('login') }}" class="btn btn-success btn-custom">Login</a>
         <a href="{{ route('register') }}" class="btn btn-dark btn-custom">Register</a>
       </div>

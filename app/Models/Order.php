@@ -27,7 +27,6 @@ class Order extends Model
         'total_amount',
         'order_status',
         'remark',
-        'payment_status'
     ];
 
     // Relationships
