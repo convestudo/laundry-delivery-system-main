@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Set the page title -->
+    <title>{{ config('app.name', 'RoyalDoby') }}</title>
+
+    <!-- Favicon (Icon on Browser Tab) -->
+    <link rel="icon" href="{{ asset('logo.ico') }}" type="image/x-icon" sizes="45x45">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

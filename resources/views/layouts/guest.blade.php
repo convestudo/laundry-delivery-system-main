@@ -7,6 +7,10 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Favicon (Icon on Browser Tab) -->
+    <link rel="icon" href="{{ asset('logo.ico') }}" type="image/x-icon" sizes="45x45">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo.png') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -66,7 +70,7 @@
         <div class="w-full max-w-md bg-white bg-opacity-90 px-6 py-6 shadow-2xl rounded-xl form-container">
             <div class="flex justify-center mb-4">
                 <a href="/">
-                    <img src="{{ asset('assets/images/logo 2.png') }}" alt="Logo" class="logo-img" style="width: 150px; height: auto;">
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="logo-img" style="width: 150px; height: auto;">
                 </a>
             </div>
 

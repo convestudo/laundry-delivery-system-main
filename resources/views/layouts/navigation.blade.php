@@ -5,7 +5,7 @@
             <div class="flex basis-2/12">
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('assets/images/logo 2.png') }}" alt="Logo" style="width: 60px; height: auto;">
+                        <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" style="width: 60px; height: auto;">
                     </a>
                 </div>
             </div>
@@ -23,13 +23,13 @@
                     <a href="{{ route('history.index') }}" class="{{ request()->routeIs('history.index') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">My Bookings</a>
                     <!-- <a href="{{ route('chatify') }}" class="{{ request()->is('chat*') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold">Chat</a> -->
                  <a href="{{ route('chatify') }}" 
-   class="{{ request()->is('chat*') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold relative">
-    Chat
-    <span id="chat-notification-badge"
-          class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-        {{ $unreadCount ?? 0 }}
-    </span>
-</a>
+                    class="{{ request()->is('chat*') ? 'text-[#164272]' : 'text-gray-500' }} font-semibold relative">
+                        Chat
+                        <span id="chat-notification-badge"
+                            class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                            {{ $unreadCount ?? 0 }}
+                        </span>
+                 </a>
 
                 </div>
             @endif
