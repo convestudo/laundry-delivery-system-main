@@ -306,13 +306,6 @@ class StripePaymentController extends Controller
         }
     }
 
-    public function payNow($id)
-    {
-        $extraCharge = ExtraCharge::findOrFail($id);
-
-        return view('stripe.pay-now', compact('extraCharge'));
-    }
-
 
 }
 
