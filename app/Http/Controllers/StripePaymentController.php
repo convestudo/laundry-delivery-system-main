@@ -306,6 +306,12 @@ class StripePaymentController extends Controller
         }
     }
 
+    public function payNow()
+    {
+        return view('stripe.pay-now');
+    }
+
+
 
 }
 
