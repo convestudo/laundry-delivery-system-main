@@ -139,7 +139,7 @@
 
                 <div class="max-w-4xl mx-auto p-6">
 
-                    <div class="flex justify-between items-center mb-4">
+                    <!-- <div class="flex justify-between items-center mb-4">
                         <div class="text-center">
                             <img src="{{ asset('assets/images/ico10.png') }}" alt="Pick Up" class="mx-auto w-10 h-10">
                             <p class="text-[#164272] text-sm mt-2">Pick Up</p>
@@ -156,7 +156,7 @@
                             <img src="{{ asset('assets/images/ico4.png') }}" alt="Completed" class="mx-auto w-10 h-10">
                             <p class="text-[#164272] text-sm mt-2">Completed</p>
                         </div>
-                    </div>
+                    </div> -->
 
 
                     @php
@@ -250,7 +250,7 @@
 
                 <div class="max-w-4xl mx-auto p-6">
                     <div class="tracking">
-                        <div class="progress-custom">
+                        <!-- <div class="progress-custom">
                             <div class="progress-track-p">
 
                             </div>
@@ -263,12 +263,12 @@
                                 <div id="step3" class="progress-step {{ $stepClasses['step3'] }}"></div>
                                 <div id="step4" class="progress-step {{ $stepClasses['step4'] }}"></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="max-w-4xl mx-auto">
                     <!-- Icons Section -->
-                    <div class="flex justify-between items-center mb-4 px-3 py-4">
+                    <div class="flex justify-between items-center px-3 py-4">
                         <div class="w-[37%] flex justify-between items-center">
 
                             <div>
@@ -298,11 +298,24 @@
 
 
                     </div>
+                    <div class="max-w-4xl mx-auto p-6">
+                    <div class="tracking">
+                        <div class="progress-custom">
+                            <div class="progress-track-p">
 
+                            </div>
+                            <div class="progress-track-done" style="width: {{ $progressWidth }};">
 
+                            </div>
+                            <div class="psteps">
+                                <div id="step1" class="progress-step {{ $stepClasses['step1'] }}"></div>
+                                <div id="step2" class="progress-step {{ $stepClasses['step2'] }}"></div>
+                                <div id="step3" class="progress-step {{ $stepClasses['step3'] }}"></div>
+                                <div id="step4" class="progress-step {{ $stepClasses['step4'] }}"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
 
                 <div class="mt-4 border p-4 rounded-lg">
                     <h1 class="text-gray-800 text-[18px] mb-2"><strong>Order Details</strong></h1>

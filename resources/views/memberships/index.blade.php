@@ -20,7 +20,7 @@
             <div class="bg-white rounded-lg">
                 <div class="mb-4 flex justify-between items-center">
                     <h3 class="text-lg font-semibold text-[#164272]">Customer List</h3>
-                    <a href="{{ route('memberships.create') }}" class="btn bg-[#ffd65b] text-gray-800 border-0 hover:bg-[#164272] hover:text-white">Add New Customer</a>
+                    <!-- <a href="{{ route('memberships.create') }}" class="btn bg-[#ffd65b] text-gray-800 border-0 hover:bg-[#164272] hover:text-white">Add New Customer</a> -->
                 </div>
 
                 <div class="overflow-x-auto">

@@ -940,6 +940,60 @@
     </div>
   </div>
 
+  <!-- Get in Touch Section -->
+<div class="contact-section" style="background: var(--blue-gradient); padding: 80px 0; color: white;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Get in Touch</h2>
+        <p style="font-size: 1.2rem; opacity: 0.95; margin-bottom: 3rem;">Ready to experience premium laundry service? Contact us today!</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <!-- Location -->
+      <div class="col-md-4">
+        <div class="contact-card" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+          <div class="contact-icon" style="width: 60px; height: 60px; background: var(--secondary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+            <svg style="width: 30px; height: 30px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <h4 style="font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">Our Location</h4>
+          <p style="opacity: 0.95; line-height: 1.6; margin: 0;">No 8, Jalan Susur Intan,<br>Taman Intan, Parit Raj,<br>Batu Pahat, Malaysia</p>
+        </div>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="col-md-4">
+        <div class="contact-card" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+          <div class="contact-icon" style="width: 60px; height: 60px; background: var(--secondary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+            <svg style="width: 30px; height: 30px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </div>
+          <h4 style="font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">Phone Number</h4>
+          <p style="opacity: 0.95; line-height: 1.6; margin: 0; font-size: 1.1rem; font-weight: 500;">014-616 6769</p>
+        </div>
+      </div>
+
+      <!-- Operating Hours -->
+      <div class="col-md-4">
+        <div class="contact-card" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 2rem; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+          <div class="contact-icon" style="width: 60px; height: 60px; background: var(--secondary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+            <svg style="width: 30px; height: 30px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+          </div>
+          <h4 style="font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">Operating Hours</h4>
+          <p style="opacity: 0.95; line-height: 1.6; margin: 0;">Monday - Sunday<br><strong>10:00 AM - 7:00 PM</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
   <script>
     // Add smooth scrolling animation on page load
     document.addEventListener('DOMContentLoaded', function() {
