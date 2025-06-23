@@ -12,10 +12,14 @@ import Alpine from 'alpinejs';
 
 // window.Alpine = Alpine;
 
-Alpine.start();
+// Alpine.start();
 
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+
+window.Alpine = Alpine;
+
+Alpine.start();
 
 window.Pusher = Pusher;
 
