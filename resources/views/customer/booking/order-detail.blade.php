@@ -396,7 +396,7 @@
                         </tr>
                     </tbody>
                 </table>
-                @if($order->driver)
+
                 <div class="mt-8 border p-4 rounded-lg">
                     <h1 class="text-gray-800 text-[18px] mb-2"><strong>Driver Details</strong></h1>
                     <hr />
@@ -412,7 +412,6 @@
                         </div>
                     </div>
                 </div>
-                @endif
 
 
 
@@ -473,7 +472,7 @@
                         });
 
                         $(document).on('mouseleave', '#driverRating', function () {
-                            highlightStars1($('#rating').val());
+                            highlightStars1($('#driver_rating').val());
                         });
                     }else{
 
