@@ -105,13 +105,9 @@ class CustomerBookController extends Controller
 
     public function getAvailableDrivers(Request $request)
     {
-        // $date = $request->pickup_date; // Pickup date from input
-        // $start = Carbon::parse($date . ' ' . $request->pickup_time_start); // Pickup start time as Carbon instance
-        // $end = Carbon::parse($date . ' ' . $request->pickup_time_end); // Pickup end time as Carbon instance
-
-        $date = $request->query('pickup_date') ?? $request->pickup_date; 
-        $start = Carbon::parse($date . ' ' . ($request->query('pickup_time_start') ?? $request->pickup_time_start));
-        $end = Carbon::parse($date . ' ' . ($request->query('pickup_time_end') ?? $request->pickup_time_end));
+        $date = $request->pickup_date; // Pickup date from input
+        $start = Carbon::parse($date . ' ' . $request->pickup_time_start); // Pickup start time as Carbon instance
+        $end = Carbon::parse($date . ' ' . $request->pickup_time_end); // Pickup end time as Carbon instance
 
         // Step 1: Get the current date and time
         $currentDateTime = Carbon::now();
@@ -146,9 +142,8 @@ class CustomerBookController extends Controller
             ->whereNotIn('id', $bookedDriverIds)
             ->get();
 
-        $availableDrivers->each(function ($d) {
-            $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
-        });
+        $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
+
 
         return response()->json($availableDrivers);
     }
