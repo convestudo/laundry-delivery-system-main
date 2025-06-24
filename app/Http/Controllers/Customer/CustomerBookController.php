@@ -142,15 +142,7 @@ class CustomerBookController extends Controller
             ->whereNotIn('id', $bookedDriverIds)
             ->get();
 
-        $availableDrivers->each(function ($d) {
-             if ($d->delivery && $d->delivery->driver_img) {
-                $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
-            } else {
-                $d->delivery->driver_img = null;
-            }
-            // $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
-        });
-
+        $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
 
 
         return response()->json($availableDrivers);
