@@ -71,4 +71,13 @@ class MembershipController extends Controller
         return redirect()->route('memberships.index')->with('success', 'Customer updated successfully.');
     }
 
+    public function destroy($id)
+    {
+        $user = User::where('role', 'customer')->findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('memberships.index')->with('success', 'Customer deleted successfully.');
+    }
+
+
 }
