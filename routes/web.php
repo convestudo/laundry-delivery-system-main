@@ -208,8 +208,7 @@ Route::prefix('/api/service-cart')->group(function () {
     Route::delete('/{id}', [CustomerBookController::class, 'destroy']); // delete specific cart item
     Route::post('/duplicate/{id}', [CustomerBookController::class, 'duplicate']); // duplicate specific cart item
     Route::put('/{id}', [CustomerBookController::class, 'update']);
-    // Route::post('/get-available-drivers', [CustomerBookController::class, 'getAvailableDrivers']);
-    // Change this line in your routes file
+    Route::post('/get-available-drivers', [CustomerBookController::class, 'getAvailableDrivers']);
     Route::get('/get-available-drivers', [CustomerBookController::class, 'getAvailableDrivers']);
     Route::post('/submit-order', [CustomerBookController::class, 'submitOrder']);
     Route::post('/get-available-vouchers', [CustomerBookController::class, 'getAvailableVouchers']);
