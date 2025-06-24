@@ -143,8 +143,15 @@ class CustomerBookController extends Controller
             ->get();
 
         $availableDrivers->each(function ($d) {
-            $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
+             if ($d->delivery && $d->delivery->driver_img) {
+                $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
+            } else {
+                $d->delivery->driver_img = null;
+            }
+            // $d->delivery->driver_img = Storage::url($d->delivery->driver_img);
         });
+
+
 
         return response()->json($availableDrivers);
     }
